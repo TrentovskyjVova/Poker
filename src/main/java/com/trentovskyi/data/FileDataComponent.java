@@ -21,9 +21,11 @@ public class FileDataComponent implements IDataComponent {
 
         return input
                 .map(s -> {
-                    String[] cards = s.trim().split(" ");
-                    Card[] cards1 = Arrays.stream(cards).map(Card::new).toArray(Card[]::new);
-                    return new Game(cards1);
+                    String[] cardRepresentations = s.trim().split(" ");
+                    Card[] cards = Arrays.stream(cardRepresentations)
+                            .map(Card::getInstance)
+                            .toArray(Card[]::new);
+                    return new Game(cards);
                 })
                 .collect(Collectors.toList());
     }

@@ -5,22 +5,20 @@ import java.util.function.Consumer;
 
 public class Game {
 
-    public static final int MAX_HAND_DECK_CARDS_COUNT = 5;
+    private static final int MAX_HAND_DECK_CARDS_COUNT = 5;
 
     private Card[] allCards;
-    private Card[] handCards = new Card[Game.MAX_HAND_DECK_CARDS_COUNT];
-    private Card[] deckCards = new Card[Game.MAX_HAND_DECK_CARDS_COUNT];
+    private Card[] handCards = new Card[MAX_HAND_DECK_CARDS_COUNT];
+    private Card[] deckCards = new Card[MAX_HAND_DECK_CARDS_COUNT];
     private String bestHand;
 
     public Game(Card[] allCards) {
         this.allCards = allCards;
 
-        for (int i = 0; i < Game.MAX_HAND_DECK_CARDS_COUNT; i++) {
+        for (int i = 0; i < MAX_HAND_DECK_CARDS_COUNT; i++) {
             this.handCards[i] = (allCards[i]);
-            this.deckCards[i] = allCards[i + Game.MAX_HAND_DECK_CARDS_COUNT];
+            this.deckCards[i] = allCards[i + MAX_HAND_DECK_CARDS_COUNT];
         }
-
-        this.bestHand = Combination.HIGHEST_CARD;
     }
 
     public Card[] getHandCards() {
