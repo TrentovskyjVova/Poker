@@ -3,31 +3,39 @@ package com.trentovskyi.data;
 import com.trentovskyi.models.Card;
 import com.trentovskyi.models.Game;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
 public class FileDataComponent implements IDataComponent {
 
+    private static final int ALL_GAME_CARDS_COUNT = 10;
+
     @Override
     public List<Game> getInputData(String path) throws IOException {
-        Stream<String> input = Files.lines(Paths.get(path));
-
-        return input
-                .map(s -> {
-                    String[] cardRepresentations = s.trim().split(" ");
-                    Card[] cards = Arrays.stream(cardRepresentations)
-                            .map(Card::getInstance)
-                            .toArray(Card[]::new);
-                    return new Game(cards);
-                })
-                .collect(Collectors.toList());
+        List<Game> games = new ArrayList<>();
+        String line;
+        try (
+                InputStream inputStream = new FileInputStream(path);
+                InputStreamReader isr = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                BufferedReader br = new BufferedReader(isr);
+        ) {
+            while ((line = br.readLine()) != null) {
+                String[] cardRepresentations = line.split(" ");
+                Card[] cards = new Card[ALL_GAME_CARDS_COUNT];
+                for (int i = 0; i < ALL_GAME_CARDS_COUNT; i++) {
+                    cards[i] = Card.getInstance(cardRepresentations[i]);
+                }
+                games.add(new Game(cards));
+            }
+        }
+        return games;
     }
 
     @Override

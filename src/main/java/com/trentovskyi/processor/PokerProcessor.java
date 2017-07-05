@@ -4,8 +4,6 @@ import com.trentovskyi.models.Card;
 import com.trentovskyi.models.Game;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 import static com.trentovskyi.models.Card.STRAIGHT_SEQUENCE;
 import static com.trentovskyi.processor.Combination.*;
@@ -37,24 +35,30 @@ public class PokerProcessor implements IProcessor {
             countedSuits.put(card.getSuit(), (count == null) ? 1 : count + 1);
         }
 
-        countedSuits = countedSuits.entrySet().stream()
-                .filter(map -> map.getValue() >= COMBINATION_NEED_CARDS)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        List<Character> suits = new ArrayList<>();
+        for (Map.Entry<Character, Integer> entry : countedSuits.entrySet()) {
+            if (entry.getValue() >= COMBINATION_NEED_CARDS) {
+                suits.add(entry.getKey());
+            }
+        }
 
-        if (countedSuits.isEmpty()) {
+        if (suits.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return checkFlushSuit(game, countedSuits.keySet());
+        return checkFlushSuit(game, suits);
     }
 
-    private List<Character> checkFlushSuit(Game game, Set<Character> suits) {
+    private List<Character> checkFlushSuit(Game game, List<Character> suits) {
         List<Character> flushSuits = new ArrayList<>();
 
         for (char suit : suits) {
-            long handSuitsCount = Arrays.stream(game.getHandCards())
-                    .filter(card -> card.getSuit() == suit)
-                    .count();
+            int handSuitsCount = 0;
+            for (Card card : game.getHandCards()) {
+                if (card.getSuit() == suit) {
+                    handSuitsCount++;
+                }
+            }
 
             boolean isSuitOk = true;
             for (int i = 0; i < COMBINATION_NEED_CARDS - handSuitsCount; i++) {
@@ -86,11 +90,11 @@ public class PokerProcessor implements IProcessor {
 
         for (Character suit : flushSuits) {
             List<Card> handCards = new ArrayList<>();
-            Arrays.stream(game.getHandCards()).forEach(card -> {
+            for (Card card : game.getHandCards()) {
                 if (card.getSuit() == suit) {
                     handCards.add(card);
                 }
-            });
+            }
 
             List<List<Card>> handCardsPawerset = powerset(handCards);
 
@@ -112,11 +116,11 @@ public class PokerProcessor implements IProcessor {
 
     private List<List<Character>> prepareCombination(List<Card> combination) {
         List<List<Character>> combinations = new ArrayList<>();
-        List<Character> faces = combination.stream()
-                .map(Card::getFaceValue)
-                .sorted()
-                .collect(Collectors.toList());
-
+        List<Character> faces = new ArrayList<>();
+        for (Card card : combination) {
+            faces.add(card.getFaceValue());
+        }
+        Collections.sort(faces);
         combinations.add(faces);
 
         if (faces.get(0) == Card.ACE) {
@@ -189,7 +193,8 @@ public class PokerProcessor implements IProcessor {
             if (handRank >= RANK_STRAIGHT) {
                 continue;
             }
-            if (Collections.indexOfSubList(STRAIGHT_SEQUENCE, combination) != -1) {
+            if (facesCount.keySet().size() == COMBINATION_NEED_CARDS
+                    && Collections.indexOfSubList(STRAIGHT_SEQUENCE, combination) != -1) {
                 bestHand = STRAIGHT;
                 handRank = RANK_STRAIGHT;
             }
