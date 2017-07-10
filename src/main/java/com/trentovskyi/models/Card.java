@@ -1,8 +1,9 @@
 package com.trentovskyi.models;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-public class Card {
+public final class Card {
 
     public static final char ACE = '1';
     private static final char ORIGIN_ACE = 'A';
@@ -21,55 +22,173 @@ public class Card {
     private static final char KING = 'R';
     private static final char ORIGIN_KING = 'K';
 
+    private static final char CLUBS = 'C';
+    private static final char DIAMONDS = 'D';
+    private static final char HEARTS = 'H';
+    private static final char SPADES = 'S';
+
     public static final List<Character> STRAIGHT_SEQUENCE = Arrays.asList(
             ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
     );
 
-    private static final Map<String, Card> DECK = new HashMap<>();
+    private static final Card[] DECK = {
+            new Card(ACE, CLUBS, ORIGIN_ACE),
+            new Card(TWO, CLUBS),
+            new Card(THREE, CLUBS),
+            new Card(FOUR, CLUBS),
+            new Card(FIVE, CLUBS),
+            new Card(SIX, CLUBS),
+            new Card(SEVEN, CLUBS),
+            new Card(EIGHT, CLUBS),
+            new Card(NINE, CLUBS),
+            new Card(TEN, CLUBS, ORIGIN_TEN),
+            new Card(JACK, CLUBS),
+            new Card(QUEEN, CLUBS),
+            new Card(KING, CLUBS, ORIGIN_KING),
 
-    private String card;
+            new Card(ACE, DIAMONDS, ORIGIN_ACE),
+            new Card(TWO, DIAMONDS),
+            new Card(THREE, DIAMONDS),
+            new Card(FOUR, DIAMONDS),
+            new Card(FIVE, DIAMONDS),
+            new Card(SIX, DIAMONDS),
+            new Card(SEVEN, DIAMONDS),
+            new Card(EIGHT, DIAMONDS),
+            new Card(NINE, DIAMONDS),
+            new Card(TEN, DIAMONDS, ORIGIN_TEN),
+            new Card(JACK, DIAMONDS),
+            new Card(QUEEN, DIAMONDS),
+            new Card(KING, DIAMONDS, ORIGIN_KING),
 
-    private char faceValue;
-    private char suit;
+            new Card(ACE, HEARTS, ORIGIN_ACE),
+            new Card(TWO, HEARTS),
+            new Card(THREE, HEARTS),
+            new Card(FOUR, HEARTS),
+            new Card(FIVE, HEARTS),
+            new Card(SIX, HEARTS),
+            new Card(SEVEN, HEARTS),
+            new Card(EIGHT, HEARTS),
+            new Card(NINE, HEARTS),
+            new Card(TEN, HEARTS, ORIGIN_TEN),
+            new Card(JACK, HEARTS),
+            new Card(QUEEN, HEARTS),
+            new Card(KING, HEARTS, ORIGIN_KING),
 
-    private Card(String card) {
-        this.card = card;
-        this.faceValue = replace(card.charAt(0));
-        this.suit = card.charAt(1);
+            new Card(ACE, SPADES, ORIGIN_ACE),
+            new Card(TWO, SPADES),
+            new Card(THREE, SPADES),
+            new Card(FOUR, SPADES),
+            new Card(FIVE, SPADES),
+            new Card(SIX, SPADES),
+            new Card(SEVEN, SPADES),
+            new Card(EIGHT, SPADES),
+            new Card(NINE, SPADES),
+            new Card(TEN, SPADES, ORIGIN_TEN),
+            new Card(JACK, SPADES),
+            new Card(QUEEN, SPADES),
+            new Card(KING, SPADES, ORIGIN_KING),
+    };
+
+    private final char originFaceValue;
+    private final char faceValue;
+    private final char suit;
+
+    private Card(char faceValue, char suit) {
+        this.originFaceValue = faceValue;
+        this.faceValue = faceValue;
+        this.suit = suit;
     }
 
-    public static Card getInstance(String cardRepresentation) {
-        return DECK.computeIfAbsent(cardRepresentation, Card::new);
+    private Card(char faceValue, char suit, char originFaceValue) {
+        this.originFaceValue = originFaceValue;
+        this.faceValue = faceValue;
+        this.suit = suit;
     }
 
-    public String getCard() {
-        return card;
+    public static Card getInstance(char faceValue, char suit) {
+        int index = getIndex(faceValue, suit);
+        return DECK[index];
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public char getOriginFaceValue() {
+        return originFaceValue;
     }
 
     public char getFaceValue() {
         return faceValue;
     }
 
-    public void setFaceValue(char faceValue) {
-        this.faceValue = faceValue;
-    }
-
     public char getSuit() {
         return suit;
     }
 
-    public void setSuit(char suit) {
-        this.suit = suit;
+    private static int getIndex(char faceValue, char suit) {
+        return getFaceOffset(faceValue) + getSuitOffset(suit);
     }
 
-    private char replace(char origin) {
-        if (origin == ORIGIN_ACE) return ACE;
-        if (origin == ORIGIN_TEN) return TEN;
-        if (origin == ORIGIN_KING) return KING;
-        return origin;
+    private static int getFaceOffset(char faceValue) {
+        int index = 0;
+        switch (faceValue) {
+            case ORIGIN_ACE:
+                index = 0;
+                break;
+            case TWO:
+                index = 1;
+                break;
+            case THREE:
+                index = 2;
+                break;
+            case FOUR:
+                index = 3;
+                break;
+            case FIVE:
+                index = 4;
+                break;
+            case SIX:
+                index = 5;
+                break;
+            case SEVEN:
+                index = 6;
+                break;
+            case EIGHT:
+                index = 7;
+                break;
+            case NINE:
+                index = 8;
+                break;
+            case ORIGIN_TEN:
+                index = 9;
+                break;
+            case JACK:
+                index = 10;
+                break;
+            case QUEEN:
+                index = 11;
+                break;
+            case ORIGIN_KING:
+                index = 12;
+                break;
+        }
+        return index;
     }
+
+    private static int getSuitOffset(char suit) {
+        int offset = 0;
+        switch (suit) {
+            case CLUBS:
+                offset = 0;
+                break;
+            case DIAMONDS:
+                offset = 13;
+                break;
+            case HEARTS:
+                offset = 26;
+                break;
+            case SPADES:
+                offset = 39;
+                break;
+        }
+        return offset;
+    }
+
 }

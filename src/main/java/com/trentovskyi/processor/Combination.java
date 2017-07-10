@@ -5,9 +5,10 @@ class Combination {
     static final int COMBINATION_NEED_CARDS = 5;
     static final int FOUR_OF_A_KIND_NEED_CARDS = 4;
     static final int THREE_OF_A_KIND_NEED_CARDS = 3;
+    static final int DISTINCT_FACES_FOR_FOUR_OF_A_KIND = 2;
     static final int DISTINCT_FACES_FOR_FULL_HOUSE = 2;
-    static final int TWO_PAIRS_NEED_PAIRS = 2;
-    static final int ONE_PAIR_NEED_CARDS = 2;
+    static final int DISTINCT_FACES_FOR_TWO_PAIRS = 3;
+    static final int DISTINCT_FACES_FOR_ONE_PAIR = 4;
 
     static final String STRAIGHT_FLUSH = "straight-flush";
     static final String FOUR_OF_A_KIND = "four-of-a-kind";

@@ -4,18 +4,13 @@ import com.trentovskyi.models.Card;
 import com.trentovskyi.models.Game;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.nio.file.StandardOpenOption.CREATE;
 
 public class FileDataComponent implements IDataComponent {
 
     private static final int ALL_GAME_CARDS_COUNT = 10;
+    private static final int BYTES_FOR_ONE_CARD = 3;
 
     @Override
     public List<Game> getInputData(String path) throws IOException {
@@ -23,14 +18,15 @@ public class FileDataComponent implements IDataComponent {
         String line;
         try (
                 InputStream inputStream = new FileInputStream(path);
-                InputStreamReader isr = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                InputStreamReader isr = new InputStreamReader(inputStream);
                 BufferedReader br = new BufferedReader(isr);
         ) {
             while ((line = br.readLine()) != null) {
-                String[] cardRepresentations = line.split(" ");
                 Card[] cards = new Card[ALL_GAME_CARDS_COUNT];
                 for (int i = 0; i < ALL_GAME_CARDS_COUNT; i++) {
-                    cards[i] = Card.getInstance(cardRepresentations[i]);
+                    cards[i] = Card.getInstance(
+                            line.charAt(i * BYTES_FOR_ONE_CARD),
+                            line.charAt(i * BYTES_FOR_ONE_CARD + 1));
                 }
                 games.add(new Game(cards));
             }
@@ -40,10 +36,9 @@ public class FileDataComponent implements IDataComponent {
 
     @Override
     public void output(String path, List<Game> result) throws IOException {
-        Iterable<String> lines = result.stream()
-                .map(Game::toString)
-                .collect(Collectors.toList());
-
-        Files.write(Paths.get(path), lines, CREATE);
+        PrintWriter printWriter = new PrintWriter(path);
+        for (Game game : result) {
+            printWriter.println(game);
+        }
     }
 }

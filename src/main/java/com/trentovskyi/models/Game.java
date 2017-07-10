@@ -1,8 +1,5 @@
 package com.trentovskyi.models;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
-
 public class Game {
 
     private static final int MAX_HAND_DECK_CARDS_COUNT = 5;
@@ -56,11 +53,17 @@ public class Game {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        Consumer<Card> consumer = c -> builder.append(c.getCard()).append(" ");
         builder.append("Hand: ");
-        Arrays.stream(handCards).forEach(consumer);
+        for (int i = 0; i < MAX_HAND_DECK_CARDS_COUNT; i++) {
+            builder.append(handCards[i].getOriginFaceValue());
+            builder.append(handCards[i].getSuit()).append(" ");
+        }
+
         builder.append("Deck: ");
-        Arrays.stream(deckCards).forEach(consumer);
+        for (int i = 0; i < MAX_HAND_DECK_CARDS_COUNT; i++) {
+            builder.append(deckCards[i].getOriginFaceValue());
+            builder.append(deckCards[i].getSuit()).append(" ");
+        }
         builder.append("Best hand: ");
         builder.append(bestHand);
         return builder.toString();

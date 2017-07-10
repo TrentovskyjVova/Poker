@@ -178,7 +178,8 @@ public class PokerProcessor implements IProcessor {
                 facesCount.put(face, (count == null) ? 1 : count + 1);
             }
 
-            if (facesCount.values().contains(FOUR_OF_A_KIND_NEED_CARDS)) {
+            if (facesCount.keySet().size() == DISTINCT_FACES_FOR_FOUR_OF_A_KIND
+                    && facesCount.values().contains(FOUR_OF_A_KIND_NEED_CARDS)) {
                 return FOUR_OF_A_KIND;
             }
 
@@ -202,7 +203,8 @@ public class PokerProcessor implements IProcessor {
             if (handRank >= RANK_THREE_OF_A_KIND) {
                 continue;
             }
-            if (facesCount.values().contains(THREE_OF_A_KIND_NEED_CARDS)) {
+            if (facesCount.keySet().size() == THREE_OF_A_KIND_NEED_CARDS
+                    && facesCount.values().contains(THREE_OF_A_KIND_NEED_CARDS)) {
                 bestHand = THREE_OF_A_KIND;
                 handRank = RANK_THREE_OF_A_KIND;
             }
@@ -210,7 +212,7 @@ public class PokerProcessor implements IProcessor {
             if (handRank >= RANK_TWO_PAIRS) {
                 continue;
             }
-            if (Collections.frequency(facesCount.values(), ONE_PAIR_NEED_CARDS) == TWO_PAIRS_NEED_PAIRS) {
+            if (facesCount.keySet().size() == DISTINCT_FACES_FOR_TWO_PAIRS) {
                 bestHand = TWO_PAIRS;
                 handRank = RANK_TWO_PAIRS;
             }
@@ -218,7 +220,7 @@ public class PokerProcessor implements IProcessor {
             if (handRank >= RANK_ONE_PAIR) {
                 continue;
             }
-            if (facesCount.values().contains(ONE_PAIR_NEED_CARDS)) {
+            if (facesCount.keySet().size() == DISTINCT_FACES_FOR_ONE_PAIR) {
                 bestHand = ONE_PAIR;
                 handRank = RANK_ONE_PAIR;
             }
