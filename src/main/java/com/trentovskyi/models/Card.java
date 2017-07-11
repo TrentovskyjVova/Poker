@@ -123,13 +123,14 @@ public final class Card {
     }
 
     private static int getIndex(char faceValue, char suit) {
-        return getFaceOffset(faceValue) + getSuitOffset(suit);
+        return getFaceIndex(faceValue) + getSuitOffset(suit);
     }
 
-    private static int getFaceOffset(char faceValue) {
+    public static int getFaceIndex(char faceValue) {
         int index = 0;
         switch (faceValue) {
             case ORIGIN_ACE:
+            case ACE:
                 index = 0;
                 break;
             case TWO:
@@ -157,6 +158,7 @@ public final class Card {
                 index = 8;
                 break;
             case ORIGIN_TEN:
+            case TEN:
                 index = 9;
                 break;
             case JACK:
@@ -166,6 +168,7 @@ public final class Card {
                 index = 11;
                 break;
             case ORIGIN_KING:
+            case KING:
                 index = 12;
                 break;
         }
