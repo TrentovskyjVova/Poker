@@ -40,5 +40,6 @@ public class FileDataComponent implements IDataComponent {
         for (Game game : result) {
             printWriter.println(game);
         }
+        printWriter.close();
     }
 }
