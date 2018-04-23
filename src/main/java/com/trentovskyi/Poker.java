@@ -15,6 +15,7 @@ public class Poker {
     private static final String OUTPUT_FILE_NAME = "./out/Output.txt";
 
     public static void main(String[] args) {
+
         IDataComponent dataComponent = new FileDataComponent();
 
         List<Game> games;
@@ -24,15 +25,17 @@ public class Poker {
             System.out.println("Bed input. " + e.getMessage());
             return;
         }
-
+        long start = System.currentTimeMillis();
         IProcessor processor = new PokerProcessor();
         processor.process(games);
-
+        long finish = System.currentTimeMillis();
         try {
             dataComponent.output(OUTPUT_FILE_NAME, games);
         } catch (IOException e) {
             System.out.println("Can't output result. " + e.getMessage());
         }
+
+        System.out.println(finish - start);
     }
 
 

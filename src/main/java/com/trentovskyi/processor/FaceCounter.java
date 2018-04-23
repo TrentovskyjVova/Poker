@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class FaceCounter {
 
-    private int[] faces = new int[13];
+    private int[] faces = new int[Card.facesSetSize];
     private int keysCount;
 
     public void clear() {

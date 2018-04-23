@@ -29,24 +29,14 @@ public class PokerProcessor implements IProcessor {
     }
 
     private List<Character> checkFlushPossible(Game game) {
-        Map<Character, Integer> countedSuits = new HashMap<>();
-        for (Card card : game.getAllCards()) {
-            Integer count = countedSuits.get(card.getSuit());
-            countedSuits.put(card.getSuit(), (count == null) ? 1 : count + 1);
-        }
+        SuitCounter countedSuits = new SuitCounter(COMBINATION_NEED_CARDS);
+        countedSuits.putAll(game.getAllCards());
 
-        List<Character> suits = new ArrayList<>();
-        for (Map.Entry<Character, Integer> entry : countedSuits.entrySet()) {
-            if (entry.getValue() >= COMBINATION_NEED_CARDS) {
-                suits.add(entry.getKey());
-            }
-        }
-
-        if (suits.isEmpty()) {
+        if (!countedSuits.containsNeededSuitsCount()) {
             return Collections.emptyList();
         }
 
-        return checkFlushSuit(game, suits);
+        return checkFlushSuit(game, countedSuits.getKeys());
     }
 
     private List<Character> checkFlushSuit(Game game, List<Character> suits) {

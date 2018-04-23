@@ -31,6 +31,13 @@ public final class Card {
             ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
     );
 
+    public static final List<Character> SUIT_SEQUENCE = Arrays.asList(
+            CLUBS, DIAMONDS, HEARTS, SPADES
+    );
+
+    public static final int facesSetSize = 13;
+    public static final int suitsSetSize = 4;
+
     private static final Card[] DECK = {
             new Card(ACE, CLUBS, ORIGIN_ACE),
             new Card(TWO, CLUBS),
@@ -175,7 +182,7 @@ public final class Card {
         return index;
     }
 
-    private static int getSuitOffset(char suit) {
+    public static int getSuitOffset(char suit) {
         int offset = 0;
         switch (suit) {
             case CLUBS:
